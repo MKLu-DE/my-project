@@ -1,6 +1,14 @@
 # tests/test_model.py
-import numpy as np
+import sys
+import os
+
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../app')))
 from model import SimpleModel
+import numpy as np
+
+
+
+
 
 def test_model_prediction():
     model = SimpleModel()
