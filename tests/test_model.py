@@ -1,6 +1,6 @@
 # tests/test_model.py
 import numpy as np
-from model import SimpleModel
+from app.model import SimpleModel
 
 def test_model_prediction():
     model = SimpleModel()
