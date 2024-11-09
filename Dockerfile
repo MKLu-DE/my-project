@@ -2,7 +2,7 @@
 FROM python:3.12-slim
 
 # Set the working directory in the container
-WORKDIR /app
+WORKDIR /folder_my_project
 
 # Copy requirements.txt into the container
 COPY requirements.txt .
@@ -24,5 +24,5 @@ COPY . .
 EXPOSE 8050
 
 # Run the application
-CMD ["python3", "main.py"]
+CMD ["python3", "app/main.py"]
 
