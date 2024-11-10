@@ -1,39 +1,48 @@
 # main.py
-import dash
-from dash import html, dcc
 from dash.dependencies import Input, Output
-import numpy as np
-from model import SimpleModel
+from dash_components import navigationImage, navigationBrand, navigationLink, app_layout
+import page_home, page_doe
+from app import app
 
-# Initialize the Dash app
-app = dash.Dash(__name__)
-model = SimpleModel()
+# ============================================= 1 ===============================================
+navBarColor         = "black"
+# navImage            = navigationImage(imageLocation="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f7/Logo_Bayer.svg/1024px-Logo_Bayer.svg.png")
+navImage            = navigationImage(imageLocation="assets/MJ_cat_Charcoal.jpg")
+navbarBrand         = navigationBrand(brandName="Tomato Rootstock Seed Drying")
+navLink_home        = navigationLink(linkName="Home", hrefName="/home")
+# navLink_online_prediction    = navigationLink(linkName="Soft Sensor", hrefName="/online_prediction")
+navLink_doe         = navigationLink(linkName="DoE", hrefName="/doe")
+# navLink_predict     = navigationLink(linkName="Sensitivity Analysis", hrefName="/prediction")
+# navLink_digital     = navigationLink(linkName="Digitalization", hrefName="/digitalization")
+# navMenu             = navigationDropdownMedu(menuName="Process Optimization", menuItemName=["GSA", "Scale up"], menuItemHref=["/gsa", "/scale_up"], menuColor=navBarColor)
 
-# Dummy training data for the model
-X_train = np.array([[1], [2], [3], [4]])
-y_train = np.array([1, 2, 3, 4])
-model.train(X_train, y_train)
-
-# Layout of the Dash app
-app.layout = html.Div([
-    html.H1("Simple Prediction App"),
-    dcc.Input(id="input-value", type="number", placeholder="Enter a number", debounce=True),
-    html.Button("Predict", id="predict-button"),
-    html.Div(id="output", children="Prediction will appear here.")
-])
-
-# Callback to handle prediction
-@app.callback(
-    Output("output", "children"),
-    Input("predict-button", "n_clicks"),
-    Input("input-value", "value")
+# ============================================= 2 ===============================================
+app.layout = app_layout(
+    contents=[
+        navImage, navbarBrand, navLink_home, 
+        navLink_doe, 
+        # navLink_online_prediction,  
+        # navLink_database, navLink_model, navLink_predict, navLink_digital
+    ],
+    navigationBarColor=navBarColor
 )
-def update_prediction(n_clicks, input_value):
-    if n_clicks is None or input_value is None:
-        return "Enter a value and click Predict."
-    prediction = model.predict(np.array([[input_value]]))[0]
-    return f"Prediction: {prediction:.2f}"
+
+# ============================================= 3 ===============================================
+@app.callback(Output("content", "children"),
+                [
+                    Input("url","pathname")
+                ])
+def pathname(pathname):
+    if pathname == "/home":
+        return page_home.layout
+    elif pathname == "/doe":
+        return page_doe.layout
+    else:
+        return page_home.layout
+
+
 
 # Run the app
 if __name__ == "__main__":
     app.run_server("0.0.0.0",port="8080")
+    # app.run_server("0.0.0.0",port="8050", debug=True)
