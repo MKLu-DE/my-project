@@ -38,6 +38,6 @@ jobs:
         run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
       
       - name: Build the Docker image
-        run: docker build -t MKLu-DE/my-project .
+        run: docker build -t mklu0611/my-project .
       - name: Push to Dockerhub
-        run: docker push MKLu-DE/my-project:latest
+        run: docker push mklu0611/my-project:latest
