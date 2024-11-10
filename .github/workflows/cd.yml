@@ -13,6 +13,21 @@ jobs:
     runs-on: self-hosted
 
     steps:
+    - name: Remove stopped containers
+      run: sudo docker container prune -f
+
+    - name: Remove unused images
+      run: sudo docker image prune -a -f
+
+    - name: Remove unused volumes
+      run: sudo docker volume prune -f
+
+    - name: Remove unused networks
+      run: sudo docker network prune -f
+
+    - name: Delete Unnecessary Files
+      run: sudo rm -rf /var/log/* 
+
     - name: Pull Docker image
       run: sudo docker pull mklu0611/my-project:latest
     - name: Delete Old docker container
