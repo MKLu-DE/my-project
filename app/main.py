@@ -36,4 +36,4 @@ def update_prediction(n_clicks, input_value):
 
 # Run the app
 if __name__ == "__main__":
-    app.run_server()
+    app.run_server("0.0.0.0",port="8080")
