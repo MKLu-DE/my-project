@@ -30,7 +30,30 @@ jobs:
 
     - name: Pull Docker image
       run: sudo docker pull mklu0611/my-project:latest
-    - name: Delete Old docker container
+
+    - name: Check if port 8080 is in use
+      id: port_check
+      run: |
+        if sudo lsof -i :8080; then
+          echo "port_in_use=true" >> $GITHUB_ENV
+        else
+          echo "port_in_use=false" >> $GITHUB_ENV
+        fi
+
+    - name: Stop existing service on port 8080 if in use
+      if: env.port_in_use == 'true'
+      run: |
+        existing_container=$(sudo docker ps --filter "publish=8080" --format "{{.ID}}")
+        if [ -n "$existing_container" ]; then
+          echo "Stopping container using port 8080: $existing_container"
+          sudo docker stop $existing_container
+        else
+          echo "Port 8080 is in use by a non-Docker service. Please change ports or stop the service."
+          exit 1
+        fi
+
+    - name: Delete Old Docker Container
       run: sudo docker rm -f my-project-container || true
+
     - name: Run Docker Container
       run: sudo docker run -d -p 8080:8080 --name my-project-container mklu0611/my-project
